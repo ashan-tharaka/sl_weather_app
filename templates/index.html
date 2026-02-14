@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SL Weather AI Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            text-align: center;
+        }
+
+        h1 { margin-bottom: 20px; font-weight: 600; letter-spacing: 1px; }
+        p.subtitle { margin-bottom: 30px; font-weight: 300; color: #ddd; }
+
+        .form-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #eee; }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        select option { background: #333; }
+        input:focus { background: rgba(255,255,255,0.2); border-color: #00d2ff; }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(58, 123, 213, 0.4); }
+
+        .results {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .result-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
+
+        .card i { font-size: 1.5rem; margin-bottom: 8px; display: block; color: #00d2ff; }
+        .highlight { font-size: 1.2rem; font-weight: 600; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <div class="glass-container">
+        <h1>SL Weather AI</h1>
+        <p class="subtitle">Predicting the pearl of the Indian Ocean</p>
+
+        <form action="/predict" method="post">
+            <div class="form-group">
+                <label>Select City</label>
+                <select name="city" required>
+                    {% for city in cities %}
+                        <option value="{{ city }}" {% if res_city == city %}selected{% endif %}>{{ city }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Current Temperature (°C)</label>
+                <input type="number" step="0.1" name="temp" placeholder="e.g. 30.5" required>
+            </div>
+
+            <div class="form-group">
+                <label>Current Rain (mm)</label>
+                <input type="number" step="0.1" name="rain" placeholder="e.g. 2.0" required>
+            </div>
+
+            <div class="form-group">
+                <label>Wind Speed (km/h)</label>
+                <input type="number" step="0.1" name="wind" placeholder="e.g. 15" required>
+            </div>
+
+            <div class="form-group">
+                <label>Month (1-12)</label>
+                <input type="number" name="month" min="1" max="12" required>
+            </div>
+
+            <button type="submit">Generate Forecast</button>
+        </form>
+
+        {% if temp %}
+        <div class="results">
+            <h3>Tomorrow in {{ res_city }}</h3>
+            <div class="result-cards">
+                <div class="card">
+                    <i class="fas fa-temperature-high"></i>
+                    <p>Temperature</p>
+                    <p class="highlight">{{ temp }}°C</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-cloud-showers-heavy"></i>
+                    <p>Conditions</p>
+                    <p class="highlight">{{ rain }}</p>
+                </div>
+                <div class="card" style="grid-column: span 2;">
+                    <i class="fas fa-wind"></i>
+                    <p>Wind Speed</p>
+                    <p class="highlight">{{ wind }} km/h</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
