@@ -22,6 +22,7 @@ df['previous_wind'] = df.groupby('city')['windspeed_10m_max'].shift(0)
 df['target_temp'] = df.groupby('city')['temperature_2m_max'].shift(-1)
 df['target_rain'] = (df.groupby('city')['rain_sum'].shift(-1) > 0.5).astype(int)
 
+# Drop Nulls
 data = df.dropna()
 
 # 2. Encoding & Elevation mapping
