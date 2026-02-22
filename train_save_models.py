@@ -12,7 +12,7 @@ df = pd.read_csv('SriLanka_Weather_Dataset.csv')
 df['time'] = pd.to_datetime(df['time'])
 df = df.sort_values(['city', 'time'])
 
-# 1. Preprocessing & Feature Engineering
+# 1.Preprocessing & Feature Engineering
 df['month'] = df['time'].dt.month
 df['previous_temp'] = df.groupby('city')['temperature_2m_max'].shift(0)
 df['previous_rain'] = df.groupby('city')['rain_sum'].shift(0)
